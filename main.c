@@ -41,7 +41,7 @@ int main()
 
 #endif // !DEBUG
 
-	ClassInfo* info = readFromFile();
+	ClassInfo* info = ClassInfo_Create();
 
 	if (info == NULL)
 	{
@@ -83,7 +83,7 @@ int main()
 		case 1:
 			printf_s("名字 学号 成绩1 成绩2\n");
 			scanf_s("%s %zu %zu %zu", name, 32, &id, &grade1, &grade2);
-			addStudent(info);
+			ClassInfo_AddStudent(info);
 			for (size_t i = 0; i < 32; i++)
 			{
 				info->students->cur->name[i] = name[i];
@@ -107,13 +107,13 @@ int main()
 			{
 				printf_s("名称:");
 				scanf_s("%s", name, 32);
-				node = findByName(info, name);
+				node = Node_FindByName(info, name);
 			}
 			else
 			{
 				printf_s("学号:");
 				scanf_s("%zu", &id);
-				node = findByID(info, id);
+				node = Node_FindByID(info, id);
 			}
 
 			if (node == NULL)
@@ -122,7 +122,7 @@ int main()
 				break;
 			}
 
-			printStudent(info, node);
+			ClassInfo_PrintStudent(info, node);
 			printf_s("名字 学号 成绩1 成绩2\n");
 			scanf_s("%s %zu %zu %zu", name, 32, &id, &grade1, &grade2);
 			for (size_t i = 0; i < 32; i++)
@@ -149,13 +149,13 @@ int main()
 			{
 				printf_s("名称:");
 				scanf_s("%s", name, 32);
-				node = findByName(info, name);
+				node = Node_FindByName(info, name);
 			}
 			else
 			{
 				printf_s("学号:");
 				scanf_s("%zu", &id);
-				node = findByID(info, id);
+				node = Node_FindByID(info, id);
 			}
 
 			if (node == NULL)
@@ -164,17 +164,17 @@ int main()
 				break;
 			}
 
-			printStudent(info, node);
+			ClassInfo_PrintStudent(info, node);
 			node = NULL;
 			break;
 
 		case 4:
 			printf_s("显示全部信息\n\n");
-			printInfo(info);
+			ClassInfo_PrintInfo(info);
 			break;
 
 		case 5:
-			saveToFile(info);
+			ClassInfo_SaveToFile(info);
 			printf_s("保存完成!\n");
 			break;
 
@@ -187,6 +187,6 @@ int main()
 		system("cls");
 
 	}
-	releaseInfo(info);
+	ClassInfo_Free(info);
 	return 0;
 }

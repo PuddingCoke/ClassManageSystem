@@ -19,7 +19,7 @@ typedef struct List
 	Node* cur;
 } List;
 
-List* createList()//创建链表
+List* List_Create()//创建链表
 {
 	List* list = (List*)malloc(sizeof(List));
 	if (list == NULL)
@@ -33,7 +33,7 @@ List* createList()//创建链表
 	return list;
 }
 
-void freeList(List *list)//释放链表
+void List_Free(List *list)//释放链表
 {
 	Node* temp;
 	while (list->head != NULL)
@@ -46,7 +46,7 @@ void freeList(List *list)//释放链表
 	free(list);
 }
 
-void addNode(List* list)//增加节点
+void List_AddNode(List* list)//增加节点
 {
 	if (list->head == NULL)
 	{

@@ -16,14 +16,14 @@ struct ClassInfo//班级信息
 
 typedef struct ClassInfo ClassInfo;
 
-void addStudent(ClassInfo* info)//增加学生
+void ClassInfo_AddStudent(ClassInfo* info)//增加学生
 {
-	addNode(info->students);
+	List_AddNode(info->students);
 	info->students->cur->sum = 0;
 	info->students->cur->score = (size_t*)malloc(sizeof(size_t) * info->subNumber);
 }
 
-void sumScoreOfStu(ClassInfo* info, Node* node)//计算学生总分
+void ClassInfo_StudentSumScore(ClassInfo* info, Node* node)//计算学生总分
 {
 	node->sum = 0;
 	for (size_t i = 0; i < info->subNumber; i++)
@@ -32,7 +32,7 @@ void sumScoreOfStu(ClassInfo* info, Node* node)//计算学生总分
 	}
 }
 
-ClassInfo* readFromFile()//从文件读取数据
+ClassInfo* ClassInfo_Create()//从文件读取数据
 {
 	ClassInfo* info = (ClassInfo*)malloc(sizeof(ClassInfo));
 
@@ -73,7 +73,7 @@ ClassInfo* readFromFile()//从文件读取数据
 		}
 	}
 
-	info->students = createList();
+	info->students = List_Create();
 
 	info->subjects = (char**)malloc(sizeof(char*) * info->subNumber);
 
@@ -125,7 +125,7 @@ ClassInfo* readFromFile()//从文件读取数据
 
 		fseek(fp, -2, SEEK_CUR);
 
-		addStudent(info);
+		ClassInfo_AddStudent(info);
 
 		char name[32];
 
@@ -166,7 +166,7 @@ ClassInfo* readFromFile()//从文件读取数据
 	return info;
 }
 
-void saveToFile(ClassInfo* info)//保存到文件
+void ClassInfo_SaveToFile(ClassInfo* info)//保存到文件
 {
 	FILE* fp;
 	fopen_s(&fp, "class.txt", "w");
@@ -196,7 +196,7 @@ void saveToFile(ClassInfo* info)//保存到文件
 	fclose(fp);
 }
 
-void printStudent(ClassInfo* info, Node* node)//打印学生相关数据
+void ClassInfo_PrintStudent(ClassInfo* info, Node* node)//打印学生相关数据
 {
 	if (node == NULL)
 	{
@@ -212,11 +212,11 @@ void printStudent(ClassInfo* info, Node* node)//打印学生相关数据
 	{
 		printf_s("%zu\t\t", node->score[i]);
 	}
-	sumScoreOfStu(info, node);
+	ClassInfo_StudentSumScore(info, node);
 	printf_s("%zu\n", node->sum);
 }
 
-double getAverageScore(ClassInfo* info, size_t i)//获取某科的平均分
+double ClassInfo_GetAvgScore(ClassInfo* info, size_t i)//获取某科的平均分
 {
 	double sum = 0;
 	Node* node = info->students->head;
@@ -235,7 +235,7 @@ double getAverageScore(ClassInfo* info, size_t i)//获取某科的平均分
 	return sum / (double)(info->students->i);
 }
 
-void printInfo(ClassInfo* info)//打印数据
+void ClassInfo_PrintInfo(ClassInfo* info)//打印数据
 {
 
 	printf_s("名字");
@@ -259,7 +259,7 @@ void printInfo(ClassInfo* info)//打印数据
 	Node* node = info->students->head;
 	while (node != NULL)
 	{
-		printStudent(info, node);
+		ClassInfo_PrintStudent(info, node);
 		node = node->next;
 		printf_s("\n");
 	}
@@ -268,16 +268,16 @@ void printInfo(ClassInfo* info)//打印数据
 
 	for (size_t i = 0; i < info->subNumber; i++)
 	{
-		printf_s("%.1lf\t\t", getAverageScore(info, i));
+		printf_s("%.1lf\t\t", ClassInfo_GetAvgScore(info, i));
 	}
 
-	printf_s("%.1lf", getAverageScore(info, info->subNumber));
+	printf_s("%.1lf", ClassInfo_GetAvgScore(info, info->subNumber));
 
 	printf_s("\n");
 
 }
 
-Node* findByName(ClassInfo* info, char name[32])//通过名字找到学生
+Node* Node_FindByName(ClassInfo* info, char name[32])//通过名字找到学生
 {
 	Node* node = info->students->head;
 	for (size_t i = 0; i < info->students->i; i++)
@@ -290,7 +290,7 @@ Node* findByName(ClassInfo* info, char name[32])//通过名字找到学生
 	return NULL;
 }
 
-Node* findByID(ClassInfo* info, size_t id)//通过学号找到学生
+Node* Node_FindByID(ClassInfo* info, size_t id)//通过学号找到学生
 {
 	Node* node = info->students->head;
 	for (size_t i = 0; i < info->students->i; i++)
@@ -372,8 +372,8 @@ Node* sortList(ClassInfo* info, Node* head, size_t i)//分数排名
 			}
 			else
 			{
-				sumScoreOfStu(info, tmpNext);
-				sumScoreOfStu(info, tmpPtr);
+				ClassInfo_StudentSumScore(info, tmpNext);
+				ClassInfo_StudentSumScore(info, tmpPtr);
 				if (tmpNext->sum < tmpPtr->sum)
 				{
 					swapStudent(info, tmpNext, tmpPtr);
@@ -387,7 +387,7 @@ Node* sortList(ClassInfo* info, Node* head, size_t i)//分数排名
 	return tmpPtr;
 }
 
-void releaseInfo(ClassInfo* info)//释放内存
+void ClassInfo_Free(ClassInfo* info)//释放内存
 {
 	for (size_t i = 0; i < info->subNumber; i++)
 	{
@@ -396,7 +396,7 @@ void releaseInfo(ClassInfo* info)//释放内存
 
 	free(info->subjects);
 
-	freeList(info->students);
+	List_Free(info->students);
 
 	free(info);
 }
