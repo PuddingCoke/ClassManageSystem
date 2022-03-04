@@ -60,6 +60,7 @@ int main()
 		printf_s("     2.修改信息\n");
 		printf_s("     3.查询信息\n");
 		printf_s("     4.显示信息\n");
+		printf_s("     5.排序信息\n");
 		printf_s("     5.保存数据\n");
 		printf_s("     0.退出\n");
 
@@ -174,6 +175,42 @@ int main()
 			break;
 
 		case 5:
+			printf_s("输入科目名称(总分):");
+			scanf_s("%s", name, 32);
+
+			int find = 0;
+
+			if (strCompare(name, "总分"))
+			{
+				find = 1;
+				ClassInfo_StudentSort(info, info->subNumber);
+			}
+
+
+			if (!find)
+			{
+				for (int i = 0; i < info->subNumber; i++)
+				{
+					if (strCompare(name, info->subjects[i]))
+					{
+						find = 1;
+						ClassInfo_StudentSort(info, i);
+						break;
+					}
+				}
+			}
+
+			if (!find)
+			{
+				printf("未找到此科目\n");
+			}
+			else
+			{
+				printf_s("排序完成!\n");
+			}
+
+			break;
+		case 6:
 			ClassInfo_SaveToFile(info);
 			printf_s("保存完成!\n");
 			break;

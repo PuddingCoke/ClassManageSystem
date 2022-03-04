@@ -16,6 +16,25 @@ struct ClassInfo//班级信息
 
 typedef struct ClassInfo ClassInfo;
 
+int strCompare(char* str1, char* str2)
+{
+	if (str1 == NULL || str2 == NULL || strlen(str1) != strlen(str2))
+	{
+		return 0;
+	}
+
+	for (int i = 0; i < strlen(str1); i++)
+	{
+		if (str1[i] != str2[i])
+		{
+			return 0;
+		}
+	}
+	
+	return 1;
+
+}
+
 void ClassInfo_AddStudent(ClassInfo* info)//增加学生
 {
 	List_AddNode(info->students);
@@ -353,11 +372,11 @@ void swapStudent(ClassInfo* info, Node* st1, Node* st2)//交换学生数据
 	st2->name[index] = '\0';
 }
 
-Node* sortList(ClassInfo* info, Node* head, size_t i)//分数排名
+void ClassInfo_StudentSort(ClassInfo* info, size_t i)//分数排名
 {
 
-	Node* tmpPtr = head;
-	Node* tmpNext = head->next;
+	Node* tmpPtr = info->students->head;
+	Node* tmpNext = info->students->head->next;
 
 	while (tmpNext != NULL)
 	{
@@ -365,26 +384,27 @@ Node* sortList(ClassInfo* info, Node* head, size_t i)//分数排名
 		{
 			if (i < info->subNumber)
 			{
-				if (tmpNext->score[i] < tmpPtr->score[i])
+				if (tmpNext->score[i] > tmpPtr->score[i])
 				{
 					swapStudent(info, tmpNext, tmpPtr);
 				}
 			}
-			else
+			else if(i==info->subNumber)
 			{
 				ClassInfo_StudentSumScore(info, tmpNext);
 				ClassInfo_StudentSumScore(info, tmpPtr);
-				if (tmpNext->sum < tmpPtr->sum)
+				if (tmpNext->sum > tmpPtr->sum)
 				{
 					swapStudent(info, tmpNext, tmpPtr);
 				}
 			}
 			tmpPtr = tmpPtr->next;
 		}
-		tmpPtr = head;
+		tmpPtr = info->students->head;
 		tmpNext = tmpNext->next;
 	}
-	return tmpPtr;
+
+	info->students->head = tmpPtr;
 }
 
 void ClassInfo_Free(ClassInfo* info)//释放内存
